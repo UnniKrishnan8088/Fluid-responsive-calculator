@@ -1,6 +1,7 @@
 import { Stack, TextField, Typography, Button } from "@mui/material";
 import "./App.css";
 import React from "react";
+import Stepper from "./pages/Stepper/Stepper";
 
 const breakpoints = [
   { label: "xl", width: 1920 },
@@ -11,7 +12,7 @@ const breakpoints = [
 ];
 
 const calculateVW = (value: number, width: number) =>
-  ((value * 100) / width).toFixed(4);
+  ((value * 100) / width).toFixed(3);
 
 function App() {
   const [inputValue, setInputValue] = React.useState<number | null>();
@@ -20,11 +21,15 @@ function App() {
   // Function to format the values
   const getCopyText = () => {
     if (!inputValue) return "";
-    return breakpoints
-      .map(
-        ({ label, width }) => `${label}: ${calculateVW(inputValue, width)}vw`
-      )
-      .join("\n");
+    const formattedValues = [
+      `xxl: "${inputValue}px"`,
+      ...breakpoints.map(
+        ({ label, width }) => `${label}: "${calculateVW(inputValue, width)}"`
+      ),
+    ].join(",\n");
+    return `{
+${formattedValues.replace(/^/gm, "  ")}
+}`;
   };
 
   // Function to copy values to clipboard
@@ -61,6 +66,7 @@ function App() {
             padding: "1rem",
             borderRadius: "10px",
             position: "relative",
+            
           }}
           mt={1}
         >
@@ -88,3 +94,4 @@ function App() {
 }
 
 export default App;
+
